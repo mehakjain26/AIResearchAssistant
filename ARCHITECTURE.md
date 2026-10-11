@@ -79,7 +79,7 @@ AIResearchAssistant/
     └── src/
         ├── main.jsx, App.jsx, styles.css, api.js
         ├── pages/             # SearchPage, LibraryPage, PaperPage
-        └── components/        # PaperCard, PaperActions, UploadButton, SummaryPanel, ChatPanel, Loading, ErrorAlert
+        └── components/        # PaperCard, PaperActions, UploadButton, DeleteButton, SummaryPanel, ChatPanel, Loading, ErrorAlert
 ```
 
 ## 4. Data Model (SQLite)
@@ -107,6 +107,7 @@ Only metadata is stored in SQLite. Every saved paper has a PDF in SeaweedFS (buc
 | POST | `/api/papers` | FR-2.1, FR-2.4 | Save a search result: fetch PDF via tool call, check it has extractable text, store in SeaweedFS, insert row. Returns 422 and saves nothing if the download fails |
 | GET | `/api/papers` | FR-2.3 | List saved and uploaded papers |
 | GET | `/api/papers/{id}` | FR-4, FR-5 | One saved paper |
+| DELETE | `/api/papers/{id}` | FR-2.6 | Delete the row, then the stored PDF (`papers/{id}.pdf`). 204; 404 if unknown |
 | GET | `/api/papers/{id}/pdf` | FR-3.3 | The stored PDF, served inline; the "View paper" link for every saved or uploaded paper |
 | POST | `/api/papers/upload` | FR-3 | Accept PDF, extract text and metadata, store PDF in SeaweedFS, insert row |
 | POST | `/api/summarize` | FR-4 | Body `{paper_id}` or `{paper: {title, url, pdf_url, external_id}}`; summary from the paper's full text. 422 if an unsaved paper's PDF can't be fetched |
@@ -158,8 +159,8 @@ Summarize and ask work on any paper: one in the library, or a search result that
 | Page | Components | Calls |
 |------|------------|-------|
 | Search (`/`) | search box, `PaperCard` list with Save, Summarize and Ask buttons; Summarize/Ask open `SummaryPanel` and `ChatPanel` inline under the card | `GET /api/search`, `POST /api/papers`, `/api/summarize`, `/api/ask` |
-| Library (`/library`) | `PaperCard` list with Open, Summarize and Ask (inline panels), `UploadButton` | `GET /api/papers`, `POST /api/papers/upload`, `/api/summarize`, `/api/ask` |
-| Paper (`/papers/:id`) | header, `SummaryPanel`, `ChatPanel` | `GET /api/papers/{id}`, `/api/summarize`, `/api/ask` |
+| Library (`/library`) | `PaperCard` list with Open, Summarize, Ask (inline panels) and Delete (with confirmation), `UploadButton` | `GET /api/papers`, `POST /api/papers/upload`, `DELETE /api/papers/{id}`, `/api/summarize`, `/api/ask` |
+| Paper (`/papers/:id`) | header with Delete, `SummaryPanel`, `ChatPanel` | `GET /api/papers/{id}`, `DELETE /api/papers/{id}`, `/api/summarize`, `/api/ask` |
 
 `SummaryPanel` and `ChatPanel` take either a saved `paper_id` or a search-result object, so both pages share them.
 

@@ -7,6 +7,7 @@ A web app for finding research papers, keeping them in a local library, and usin
 | Feature | What it does |
 |---------|--------------|
 | **Search** | Search arXiv by keyword or topic (no account or API key needed; top 10 results). Each result shows title, authors, year, abstract and a link. |
+| **Delete** | Remove a paper from the library (with a confirmation). Its stored PDF is deleted too. |
 | **Save to library** | Save a search result. The app downloads the paper's PDF, stores it, and keeps the paper in a local database. If the PDF can't be fetched, the save fails and you are told why. Saved papers persist across page refreshes and restarts. |
 | **Upload a PDF** | Upload your own PDF. Its title, authors, year and abstract are extracted automatically (by the LLM, from the first pages) and the paper appears in the library like any other. |
 | **Summarize** | Generate a summary (problem, approach, results, limitations) from the paper's full text. Works on library papers and on search results you haven't saved. |
@@ -48,7 +49,7 @@ More detail is in [`ARCHITECTURE.md`](ARCHITECTURE.md); the requirements are in 
 ├── frontend/                React + Vite app
 │   ├── package.json, vite.config.js, index.html
 │   ├── src/pages/           SearchPage, LibraryPage, PaperPage
-│   ├── src/components/      PaperCard, PaperActions, SummaryPanel, ChatPanel, UploadButton, Loading, ErrorAlert
+│   ├── src/components/      PaperCard, PaperActions, SummaryPanel, ChatPanel, UploadButton, DeleteButton, Loading, ErrorAlert
 │   ├── src/api.js           calls to the backend
 │   ├── nginx.conf, Dockerfile
 ├── mockups/index.html       UI mockups
@@ -101,6 +102,7 @@ The storage connection is fixed in `docker-compose.yml`. To change any other bac
 | POST | `/api/papers` | Save a search result (422 if its PDF can't be fetched) |
 | GET | `/api/papers` | List the library, newest first |
 | GET | `/api/papers/{id}` | One saved paper |
+| DELETE | `/api/papers/{id}` | Delete a saved paper and its stored PDF (204) |
 | GET | `/api/papers/{id}/pdf` | The stored PDF, shown inline (the "View paper" link for saved and uploaded papers) |
 | POST | `/api/papers/upload` | Upload a PDF (multipart field `file`) |
 | POST | `/api/summarize` | Body `{"paper_id": 1}` or `{"paper": {...search result...}}` |
@@ -124,4 +126,4 @@ The tests run inside the backend container (needs internet access for the live a
 - Metadata extracted from uploaded PDFs comes from an LLM and can be wrong on unusual layouts.
 - Questions are answered one at a time from the paper's text. The chat shown in the page is not stored or sent back as context.
 - Saving the same paper twice creates two entries.
-- There is no delete or edit for library papers.
+- Library papers can be deleted but not edited.

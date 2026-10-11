@@ -28,6 +28,7 @@ Source: project brief. Every requirement below is stated in, or directly implied
 - FR-2.3 The user can browse previously saved papers.
 - FR-2.4 Saving a paper stores the paper's PDF itself, not only its metadata, whenever the PDF is retrievable from the paper's link. The full text is extracted from the stored PDF when it is needed.
 - FR-2.5 If the PDF cannot be downloaded, the save fails, nothing is added to the library, and the user is notified.
+- FR-2.6 The user can delete a paper from the library, after confirming. Its stored PDF is deleted too.
 
 ### FR-3 Upload PDF Papers
 - FR-3.1 The user can upload a research paper in PDF format and add it to the local database.

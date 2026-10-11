@@ -16,7 +16,7 @@ async function request(path, options) {
     }
     throw new Error(message);
   }
-  return res.json();
+  return res.status === 204 ? null : res.json();
 }
 
 const post = (path, body) =>
@@ -29,6 +29,7 @@ const post = (path, body) =>
 export const searchPapers = (q) => request(`/api/search?q=${encodeURIComponent(q)}`);
 export const listPapers = () => request("/api/papers");
 export const getPaper = (id) => request(`/api/papers/${id}`);
+export const deletePaper = (id) => request(`/api/papers/${id}`, { method: "DELETE" });
 export const savePaper = (result) => post("/api/papers", result);
 export const uploadPaper = (file) => {
   const form = new FormData();

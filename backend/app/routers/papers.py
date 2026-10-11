@@ -39,6 +39,14 @@ def get_paper(paper_id: int, db: Session = Depends(get_db)):
     return get_paper_or_404(db, paper_id)
 
 
+@router.delete("/{paper_id}", status_code=204)
+def delete_paper(paper_id: int, db: Session = Depends(get_db)):
+    """Removes the paper from the library and deletes its stored PDF."""
+    db.delete(get_paper_or_404(db, paper_id))
+    db.commit()  # row first: a leftover PDF is harmless, a row without its PDF would be broken
+    storage.delete_pdf(paper_id)
+
+
 @router.get("/{paper_id}/pdf")
 def get_paper_pdf(paper_id: int, db: Session = Depends(get_db)):
     """The stored PDF, shown inline in the browser (the 'View paper' link for uploaded papers)."""

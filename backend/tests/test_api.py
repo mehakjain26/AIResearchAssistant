@@ -85,6 +85,8 @@ def test_arxiv_rate_limit_is_readable(monkeypatch):
 
 def test_live_arxiv_search_returns_downloadable_papers(client):
     r = client.get("/api/search", params={"q": "attention is all you need"})
+    if r.status_code == 429:
+        pytest.skip("arXiv rate limit reached; not a bug in the app")
     assert r.status_code == 200, r.text
     results = r.json()
     assert results and all(p["pdf_url"] and p["title"] for p in results)
@@ -235,3 +237,21 @@ def test_stored_pdf_is_served_inline(client):
     assert r.status_code == 200 and r.content == pdf_bytes
     assert r.headers["content-type"] == "application/pdf" and "inline" in r.headers["content-disposition"]
     assert client.get("/api/papers/424242/pdf").status_code == 404
+
+
+def test_delete_removes_row_and_stored_pdf(client):
+    from app.db import SessionLocal
+    from app.models import Paper
+    with SessionLocal() as db:
+        row = Paper(title="to delete", authors=[])
+        db.add(row)
+        db.commit()
+        pid = row.id
+    storage.put_pdf(pid, make_pdf("bye"))
+    assert client.delete(f"/api/papers/{pid}").status_code == 204
+    assert client.get(f"/api/papers/{pid}").status_code == 404
+    assert pid not in [p["id"] for p in client.get("/api/papers").json()]
+    with pytest.raises(AppError) as e:
+        storage.get_pdf(pid)  # the stored PDF is gone too
+    assert e.value.status == 404
+    assert client.delete(f"/api/papers/{pid}").status_code == 404  # already gone

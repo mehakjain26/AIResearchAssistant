@@ -25,7 +25,7 @@ You make sure the AI Research Assistant's documentation is accurate and up to da
    - **Data model** (columns of `papers`) against `backend/app/models.py`.
    - **Flows** (search strategy, save steps and failure behaviour, tool-call limits, what is cached, what is stored where) against `backend/app/services/*` and `backend/app/routers/*`.
    - **Commands**: every command in the run, test, and setup instructions must be correct and runnable from the stated directory (check file names, flags, paths). The project runs only in Docker, so the documented commands are Docker commands. You may run harmless checks such as `docker compose config -q` and `docker compose build`. Do not start the stack, run the tests, call the OpenAI API, or modify anything.
-   - **Counts and claims** such as numbers of tests, "no delete feature", "chat history is not stored", limitations: confirm they are still true.
+   - **Counts and claims** such as numbers of tests, "no edit feature", "chat history is not stored", limitations: confirm they are still true.
    - **Leftovers** of removed things. Search for stale names such as `Semantic Scholar`, `MinIO`, `scholar.py`, `run.sh`, `full_text`, `pdf_key`, `SEMANTIC_SCHOLAR_API_KEY`, `Claude` (the LLM is OpenAI) using Grep across all docs and config.
    - **Version labels** (for example "Draft v0.x") and consistency between README, ARCHITECTURE and REQUIREMENTS: the same fact should not be stated differently in two places.
 3. Also check completeness against what a newcomer needs: could someone who only has the README understand the structure and get the app running? Note missing prerequisites, missing steps, or unexplained settings.
