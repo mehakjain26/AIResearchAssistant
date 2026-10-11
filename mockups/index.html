@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Research Assistant: UI Mockups</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --surface: #fff; --text: #1d2330; --muted: #667085; --border: #e3e6ec;
+    --accent: #3b5bdb; --accent-soft: #edf1ff; --ok: #1a7f4b; --ok-soft: #e6f6ed;
+    --err: #b42318; --err-soft: #fdecea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12151c; --surface: #1b2029; --text: #e8ebf1; --muted: #98a2b3; --border: #2b3240;
+      --accent: #7c93ff; --accent-soft: #232b4a; --ok: #5fd69a; --ok-soft: #14301f;
+      --err: #ff8a7a; --err-soft: #3a1915;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header.app { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+  .bar { max-width: 920px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; gap: 24px; height: 56px; }
+  .brand { font-weight: 700; }
+  nav { display: flex; gap: 4px; }
+  nav button { background: none; border: 0; padding: 8px 14px; border-radius: 8px; font: inherit; color: var(--muted); cursor: pointer; }
+  nav button.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  main { max-width: 920px; margin: 0 auto; padding: 24px 16px 64px; }
+  .screen { display: none; } .screen.active { display: block; }
+  .note { font-size: 12px; color: var(--muted); margin: 0 0 16px; }
+  h1 { font-size: 20px; margin: 0 0 16px; }
+  .searchbox { display: flex; gap: 8px; margin-bottom: 20px; }
+  input[type=text] { flex: 1; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font: inherit; }
+  button.btn { padding: 9px 16px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.sm { padding: 6px 12px; font-size: 13px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .card h2 { font-size: 16px; margin: 0 0 4px; }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .abstract { font-size: 14px; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .actions a { margin-left: auto; font-size: 13px; color: var(--accent); text-decoration: none; }
+  .tag { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--ok-soft); color: var(--ok); font-weight: 600; }
+  .alert { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--err-soft); color: var(--err); font-size: 14px; }
+  .panel { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 8px; }
+  .summary { background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+  .summary ul { margin: 6px 0 0; padding-left: 18px; }
+  .chat { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .msg { max-width: 82%; padding: 9px 12px; border-radius: 12px; font-size: 14px; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
+  .msg.bot { align-self: flex-start; background: var(--bg); border: 1px solid var(--border); }
+  .loading { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+  .spin { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: s 0.9s linear infinite; }
+  @keyframes s { to { transform: rotate(360deg); } }
+  .ask { display: flex; gap: 8px; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .toolbar h1 { margin: 0; }
+  .drop { border: 2px dashed var(--border); border-radius: 12px; padding: 18px; text-align: center; color: var(--muted); margin-bottom: 16px; }
+  .back { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0; margin-bottom: 12px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } .bar { gap: 12px; } }
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="bar">
+    <span class="brand">Research Assistant</span>
+    <nav>
+      <button data-s="search" class="active">Search</button>
+      <button data-s="library">Library</button>
+      <button data-s="paper">Paper detail</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- SEARCH -->
+<section class="screen active" id="search">
+  <p class="note">Mockup: Search page (/). Cards show the three states: idle, Summarize/Ask open inline, and a failed save.</p>
+  <div class="searchbox">
+    <input type="text" value="graph neural networks" aria-label="Search papers">
+    <button class="btn primary">Search</button>
+  </div>
+
+  <!-- idle card -->
+  <article class="card">
+    <h2>Semi-Supervised Classification with Graph Convolutional Networks</h2>
+    <div class="meta">Thomas N. Kipf, Max Welling · 2017</div>
+    <p class="abstract">We present a scalable approach for semi-supervised learning on graph-structured data that is based on an efficient variant of convolutional neural networks which operate directly on graphs. We motivate the choice of our convolutional architecture via a localized first-order approximation of spectral graph convolutions.</p>
+    <div class="actions">
+      <button class="btn primary sm">Save</button>
+      <button class="btn sm">Summarize</button>
+      <button class="btn sm">Ask</button>
+      <a href="#">View paper ↗</a>
+    </div>
+  </article>
+
+  <!-- card with inline summary + chat -->
+  <article class="card">
+    <h2>Graph Attention Networks</h2>
+    <div class="meta">Petar Veličković, Guillem Cucurull, Arantxa Casanova, et al. · 2018</div>
+    <p class="abstract">We present graph attention networks (GATs), novel neural network architectures that operate on graph-structured data, leveraging masked self-attentional layers to address the shortcomings of prior methods based on graph convolutions or their approximations.</p>
+    <div class="actions">
+      <button class="btn primary sm">Save</button>
+      <button class="btn sm">Summarize</button>
+      <button class="btn sm">Ask</button>
+      <a href="#">View paper ↗</a>
+    </div>
+    <div class="panel">
+      <h3>Summary</h3>
+      <div class="summary">
+        <strong>Problem.</strong> Earlier graph networks weight all neighbours equally or depend on the graph's structure.
+        <ul>
+          <li><strong>Approach:</strong> masked self-attention over each node's neighbourhood.</li>
+          <li><strong>Results:</strong> state of the art on Cora, Citeseer, Pubmed and an inductive PPI task.</li>
+          <li><strong>Limitations:</strong> attention cost grows with node degree.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Ask about this paper</h3>
+      <div class="chat">
+        <div class="msg user">What datasets are used?</div>
+        <div class="msg bot">The paper evaluates on Cora, Citeseer and Pubmed (transductive) and a protein-protein interaction dataset (inductive).</div>
+        <div class="msg user">What are the major limitations?</div>
+        <div class="loading"><span class="spin"></span> Reading the paper…</div>
+      </div>
+      <div class="ask">
+        <input type="text" placeholder="Ask a question about this paper" aria-label="Question">
+        <button class="btn primary">Ask</button>
+      </div>
+    </div>
+  </article>
+
+  <!-- failed save card -->
+  <article class="card">
+    <h2>Inductive Representation Learning on Large Graphs</h2>
+    <div class="meta">William L. Hamilton, Rex Ying, Jure Leskovec · 2017</div>
+    <p class="abstract">Low-dimensional embeddings of nodes in large graphs have proved extremely useful in a variety of prediction tasks, from content recommendation to identifying protein functions. However, most existing approaches require that all nodes in the graph are present during training of the embeddings.</p>
+    <div class="actions">
+      <button class="btn primary sm">Save</button>
+      <button class="btn sm">Summarize</button>
+      <button class="btn sm">Ask</button>
+    </div>
+    <div class="alert" role="alert">Could not save: Could not fetch the paper's PDF: server returned HTTP 404.</div>
+  </article>
+</section>
+
+<!-- LIBRARY -->
+<section class="screen" id="library">
+  <p class="note">Mockup: Library page (/library). Newest first. Saved and uploaded papers look the same.</p>
+  <div class="toolbar">
+    <h1>Library</h1>
+    <button class="btn primary">Upload PDF</button>
+  </div>
+  <div class="drop">Drop a PDF here, or use Upload PDF. Title, authors, year and abstract are extracted automatically.</div>
+
+  <article class="card">
+    <h2>Attention Is All You Need</h2>
+    <div class="meta">Ashish Vaswani, Noam Shazeer, Niki Parmar, et al. · 2017</div>
+    <p class="abstract">The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms.</p>
+    <div class="actions">
+      <button class="btn primary sm" data-go="paper">Open</button>
+      <button class="btn sm">Summarize</button>
+      <button class="btn sm">Ask</button>
+      <a href="#">View paper ↗</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <h2>Deep Residual Learning for Image Recognition</h2>
+    <div class="meta">Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun · 2016</div>
+    <p class="abstract">Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously.</p>
+    <div class="actions">
+      <button class="btn primary sm" data-go="paper">Open</button>
+      <button class="btn sm">Summarize</button>
+      <button class="btn sm">Ask</button>
+    </div>
+  </article>
+</section>
+
+<!-- PAPER DETAIL -->
+<section class="screen" id="paper">
+  <p class="note">Mockup: Paper page (/papers/:id), reached from the Library.</p>
+  <button class="back" data-go="library">← Back to library</button>
+  <article class="card">
+    <h2>Attention Is All You Need</h2>
+    <div class="meta">Ashish Vaswani, Noam Shazeer, Niki Parmar, et al. · 2017</div>
+    <p style="font-size:14px;margin:0">The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.</p>
+  </article>
+
+  <div class="two">
+    <section class="card">
+      <div class="toolbar" style="margin-bottom:10px"><h3 style="margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Summary</h3><button class="btn primary sm">Summarize</button></div>
+      <div class="summary">
+        <strong>Problem.</strong> Sequence models relying on recurrence are slow to train and hard to parallelise.
+        <ul>
+          <li><strong>Approach:</strong> the Transformer, built only from self-attention and feed-forward layers.</li>
+          <li><strong>Results:</strong> 28.4 BLEU on WMT 2014 English–German with far less training cost.</li>
+          <li><strong>Limitations:</strong> attention cost grows quadratically with sequence length.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 style="margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Ask about this paper</h3>
+      <div class="chat">
+        <div class="msg user">How does this method compare with the baselines?</div>
+        <div class="msg bot">It outperforms the best earlier models, including ensembles, on English–German and English–French translation while using a fraction of the training compute.</div>
+      </div>
+      <div class="ask">
+        <input type="text" placeholder="Ask a question about this paper" aria-label="Question">
+        <button class="btn primary">Ask</button>
+      </div>
+    </section>
+  </div>
+</section>
+
+</main>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+    document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.s === id));
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => show(b.dataset.s)));
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => show(b.dataset.go)));
+</script>
+</body>
+</html>

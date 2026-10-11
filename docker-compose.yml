@@ -1,0 +1,35 @@
+services:
+  storage:
+    image: chrislusf/seaweedfs:latest   # S3-compatible object store (Apache-2.0)
+    command: server -dir=/data -s3
+    volumes:
+      - storage-data:/data
+    healthcheck:   # the S3 API answers only once the filer behind it is ready
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8333/"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+  backend:
+    build: ./backend
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1}
+      MAX_INPUT_TOKENS: ${MAX_INPUT_TOKENS:-900000}
+      S3_ENDPOINT: http://storage:8333
+    volumes:
+      - db-data:/app/data
+    depends_on:
+      storage:
+        condition: service_healthy   # don't start the API until the object store can serve requests
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  storage-data:
+  db-data:
