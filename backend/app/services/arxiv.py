@@ -64,8 +64,12 @@ def parse(xml_text: str) -> list[SearchResult]:
     return results
 
 
+USER_AGENT = "AIResearchAssistant/1.0 (https://github.com/mehakjain26/AIResearchAssistant; contact: jain1002@purdue.edu)"
+
+
 def _fetch(query: str, limit: int) -> list[SearchResult]:
     global _last_request
+    headers = {"User-Agent": USER_AGENT}
     with _lock:  # keep to arXiv's request-rate guideline
         wait = MIN_INTERVAL - (time.monotonic() - _last_request)
         if wait > 0:
@@ -74,6 +78,7 @@ def _fetch(query: str, limit: int) -> list[SearchResult]:
             resp = httpx.get(
                 API,
                 params={"search_query": query, "start": 0, "max_results": limit, "sortBy": "relevance"},
+                headers=headers,
                 timeout=20,
                 follow_redirects=True,
             )

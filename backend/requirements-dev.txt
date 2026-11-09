@@ -1,0 +1,6 @@
+-r requirements.txt
+moto>=5.2.3
+pytest-cov>=7.0.0
+pytest-playwright>=0.10.0
+# then once: python -m playwright install chromium
+mutmut>=3.8.1

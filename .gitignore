@@ -7,3 +7,4 @@ dist/
 storage-data/
 .pytest_cache/
 .DS_Store
+mutants/
